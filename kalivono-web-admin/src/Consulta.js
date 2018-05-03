@@ -1,21 +1,41 @@
 import React, { Component } from 'react';
 import TabelaTermos from './TabelaTermos';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
+import ModalVisualizacao from './ModalVisualizacao';
 
 class Consulta extends Component {
     constructor() {
         super();
         this.state = {
             filtro: '',
-            termos: []
+            termos: [],
+            termosCarregados: false,
+            termoSelecionado: {}
         };
 
         this.urlApi = 'http://localhost:3000/termos/';
 
         this.aoPesquisar = this.aoPesquisar.bind(this);
+        this.aoVisualizarTermo = this.aoVisualizarTermo.bind(this);
+        this.aoEditarTermo = this.aoEditarTermo.bind(this);
+        this.aoRemoverTermo = this.aoRemoverTermo.bind(this);
+    }
+
+    aoVisualizarTermo(termo) {
+        this.setState({ termoSelecionado: termo });
+    }
+
+    aoEditarTermo(termo) {
+        this.setState({ termoSelecionado: termo });
+    }
+
+    aoRemoverTermo(termo) {
+        this.setState({ termoSelecionado: termo });
     }
 
     aoPesquisar(evento) {
+        this.setState({ termosCarregados: false });
         const valor = evento.target.value;
         this.setState({
             filtro: valor
@@ -24,7 +44,7 @@ class Consulta extends Component {
             axios
                 .get(`${this.urlApi}${evento.target.value}`)
                 .then(
-                    resposta => this.setState({ termos: resposta.data })
+                    resposta => this.setState({ termos: resposta.data, termosCarregados: true })
                 );
         }
 
@@ -50,12 +70,32 @@ class Consulta extends Component {
 
                 <br />
 
+                <div className="row">
+                    <div className="col-md-5"></div>
+                    <div className="col-md-2">
+                        {
+                            this.state.filtro && !this.state.termosCarregados &&
+                            <div className="text-center">
+                                <ReactLoading type="spin" color="#444" />
+                            </div>
+                        }
+                    </div>
+                    <div className="col-md-5"></div>
+                </div>
+
                 {
                     this.state.filtro &&
                     <div className="table-responsive">
-                        <TabelaTermos termos={this.state.termos} />
+                        <TabelaTermos
+                            idModalVisualizacao="modalVisualizacao"
+                            termos={this.state.termos}
+                            funcaoVisualizacao={this.aoVisualizarTermo}
+                            funcaoRemocao={this.aoRemoverTermo}
+                            funcaoEdicao={this.aoEditarTermo} />
                     </div>
                 }
+
+                <ModalVisualizacao idModal="modalVisualizacao" termo={this.state.termoSelecionado} />
             </div>
         );
     }

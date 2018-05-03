@@ -32,11 +32,13 @@ class TabelaMidias extends Component {
                         <FontAwesome name="eye" />
                     </button>
                 </td>
-                <td>
-                    <button type="button" className="btn btn-link" onClick={() => this.executaRemocao(midia)} >
-                        <FontAwesome name="trash" />
-                    </button>
-                </td>
+                {!this.props.somenteLeitura &&
+                    <td>
+                        <button type="button" className="btn btn-link" onClick={() => this.executaRemocao(midia)} >
+                            <FontAwesome name="trash" />
+                        </button>
+                    </td>
+                }
             </tr>
         ) : [];
 
@@ -49,7 +51,7 @@ class TabelaMidias extends Component {
                                 <th>URL</th>
                                 <th>Tipo</th>
                                 <th>Visualizar</th>
-                                <th>Remover</th>
+                                {!this.props.somenteLeitura && <th>Remover</th>}
                             </tr>
                         </thead>
                         <tbody>

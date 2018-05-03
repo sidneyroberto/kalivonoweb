@@ -22,7 +22,6 @@ class Video extends Component {
     }
 
     atualizaId() {
-        console.log(this.props.urlMidia);
         let id = this.obterIdDoVideo(this.props.urlMidia);
         if (id !== this.state.idVideo) {
             if (id) this.setState({ idVideo: id, urlValida: true });
