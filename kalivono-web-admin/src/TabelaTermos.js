@@ -42,7 +42,7 @@ class TabelaTermos extends Component {
                             <span>Editar termo</span>
                         </ReactTooltip>
                     </button>
-                    <button onClick={() => this.aoExecutarRemocao(termo)} data-tip data-for="tipRemover" type="button" className="btn btn-link">
+                    <button onClick={() => this.aoExecutarRemocao(termo)} data-tip data-for="tipRemover" data-toggle="modal" data-target={`#${this.props.idModalRemocao}`} type="button" className="btn btn-link">
                         <FontAwesome name='trash' />
                         <ReactTooltip id="tipRemover" type="info">
                             <span>Remover termo</span>

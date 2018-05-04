@@ -3,6 +3,7 @@ import TabelaTermos from './TabelaTermos';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
 import ModalVisualizacao from './ModalVisualizacao';
+import ModalRemocao from './ModalRemocao';
 
 class Consulta extends Component {
     constructor() {
@@ -11,7 +12,10 @@ class Consulta extends Component {
             filtro: '',
             termos: [],
             termosCarregados: false,
-            termoSelecionado: {}
+            termoSelecionado: {},
+            erro: false,
+            sucesso: false,
+            mensagem: ''
         };
 
         this.urlApi = 'http://localhost:3000/termos/';
@@ -20,6 +24,7 @@ class Consulta extends Component {
         this.aoVisualizarTermo = this.aoVisualizarTermo.bind(this);
         this.aoEditarTermo = this.aoEditarTermo.bind(this);
         this.aoRemoverTermo = this.aoRemoverTermo.bind(this);
+        this.removerTermo = this.removerTermo.bind(this);
     }
 
     aoVisualizarTermo(termo) {
@@ -35,7 +40,11 @@ class Consulta extends Component {
     }
 
     aoPesquisar(evento) {
-        this.setState({ termosCarregados: false });
+        this.setState({
+            termosCarregados: false,
+            erro: false,
+            sucesso: false
+        });
         const valor = evento.target.value;
         this.setState({
             filtro: valor
@@ -49,6 +58,33 @@ class Consulta extends Component {
         }
 
         console.log(this.state.termos);
+    }
+
+    removerTermo() {
+        this.setState({ erro: false, sucesso: false });
+
+        axios
+            .delete(`${this.urlApi}${this.state.termoSelecionado._id}`)
+            .then(
+                () => {
+                    let id = this.state.termoSelecionado._id;
+                    let termosAux = this.state.termos.filter((termo) => {
+                        return termo._id !== id;
+                    });
+                    this.setState({
+                        sucesso: true,
+                        mensagem: 'Termo removido',
+                        termos: termosAux
+                    });
+                }
+            )
+            .catch((erro) => {
+                console.log(erro);
+                this.setState({
+                    erro: true,
+                    mensagem: 'Ocorreu um erro ao tentar remover o termo'
+                });
+            });
     }
 
     render() {
@@ -70,6 +106,30 @@ class Consulta extends Component {
 
                 <br />
 
+                {
+                    this.state.sucesso &&
+                    <div>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <span className="alert alert-success">{this.state.mensagem}</span>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                }
+
+                {
+                    this.state.erro &&
+                    <div>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <span className="alert alert-danger">{this.state.mensagem}</span>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                }
+
                 <div className="row">
                     <div className="col-md-5"></div>
                     <div className="col-md-2">
@@ -88,6 +148,7 @@ class Consulta extends Component {
                     <div className="table-responsive">
                         <TabelaTermos
                             idModalVisualizacao="modalVisualizacao"
+                            idModalRemocao="modalRemocao"
                             termos={this.state.termos}
                             funcaoVisualizacao={this.aoVisualizarTermo}
                             funcaoRemocao={this.aoRemoverTermo}
@@ -95,7 +156,13 @@ class Consulta extends Component {
                     </div>
                 }
 
-                <ModalVisualizacao idModal="modalVisualizacao" termo={this.state.termoSelecionado} />
+                <ModalVisualizacao
+                    idModal="modalVisualizacao"
+                    termo={this.state.termoSelecionado} />
+                <ModalRemocao
+                    idModal="modalRemocao"
+                    funcaoRemocao={this.removerTermo}
+                    nomeTermo={this.state.termoSelecionado.emTerena} />
             </div>
         );
     }

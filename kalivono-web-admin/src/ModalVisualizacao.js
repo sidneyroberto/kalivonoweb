@@ -33,18 +33,28 @@ class ModalVisualizacao extends Component {
                             </div>
 
                             <div className="modal-body">
-                                <p><b>Significado em português:</b>&nbsp;{this.props.termo.emPortugues}</p>
-                                <p><b>Aplicação em uma frase:</b>&nbsp;{this.props.termo.aplicacaoFrase}</p>
-                                <p><b>Significado da aplicação em frase:</b>&nbsp;{this.props.termo.significadoAplicacaoFrase}</p>
-                                <TabelaMidias
-                                    midias={this.props.termo.midias}
-                                    somenteLeitura={true}
-                                    funcaoDeVisualizacao={this.aoVisualizarMidia}
-                                    idModal="modalMidia" />
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <p><b>Significado em português:</b>&nbsp;{this.props.termo.emPortugues}</p>
+                                        <p><b>Aplicação em uma frase:</b>&nbsp;{this.props.termo.aplicacaoFrase}</p>
+                                        <p><b>Significado da aplicação em frase:</b>&nbsp;{this.props.termo.significadoAplicacaoFrase}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="table-responsive">
+                                            <TabelaMidias
+                                                midias={this.props.termo.midias}
+                                                somenteLeitura={true}
+                                                funcaoDeVisualizacao={this.aoVisualizarMidia}
+                                                idModal="modalMidia" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" data-dismiss="modal">Fechar</button>
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Fechar</button>
                             </div>
 
                         </div>
