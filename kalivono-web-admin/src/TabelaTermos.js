@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import ReactTooltip from 'react-tooltip';
+import { Link } from 'react-router-dom';
 
 class TabelaTermos extends Component {
 
     constructor(props) {
         super(props);
 
-        this.aoExecutarEdicao = this.aoExecutarEdicao.bind(this);
         this.aoExecutarRemocao = this.aoExecutarRemocao.bind(this);
         this.aoExecutarVisualizacao = this.aoExecutarVisualizacao.bind(this);
     }
@@ -18,10 +18,6 @@ class TabelaTermos extends Component {
 
     aoExecutarRemocao(termo) {
         this.props.funcaoRemocao(termo);
-    }
-
-    aoExecutarEdicao(termo) {
-        this.props.funcaoEdicao(termo);
     }
 
     render() {
@@ -36,12 +32,12 @@ class TabelaTermos extends Component {
                             <span>Visualizar termo</span>
                         </ReactTooltip>
                     </button>
-                    <button onClick={() => this.aoExecutarEdicao(termo)} data-tip data-for="tipEditar" type="button" className="btn btn-link">
-                        <FontAwesome name='edit' />
+                    <Link to={{ pathname: '/cadastro', state: { termo: termo } }} data-tip data-for="tipEditar">
+                        <FontAwesome className="btn btn-link" name='edit' />
                         <ReactTooltip id="tipEditar" type="info">
                             <span>Editar termo</span>
                         </ReactTooltip>
-                    </button>
+                    </Link>
                     <button onClick={() => this.aoExecutarRemocao(termo)} data-tip data-for="tipRemover" data-toggle="modal" data-target={`#${this.props.idModalRemocao}`} type="button" className="btn btn-link">
                         <FontAwesome name='trash' />
                         <ReactTooltip id="tipRemover" type="info">
@@ -49,7 +45,7 @@ class TabelaTermos extends Component {
                         </ReactTooltip>
                     </button>
                 </td>
-            </tr>
+            </tr >
         ) : [];
 
         return (

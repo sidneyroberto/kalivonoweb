@@ -35,6 +35,21 @@ class TermoController {
             );
     }
 
+    static atualizar(req, res) {
+        let id = sanitize(req.params.id);
+        let termo = req.params.body;
+        Termo
+            .findByIdAndUpdate(id, termo)
+            .exec()
+            .then(
+                (termo) => res.json(termo),
+                (erro) => {
+                    console.log(erro);
+                    res.status(500).json('Ocorreu um erro ao tentar atualizar o termo');
+                }
+            );
+    }
+
     static remover(req, res) {
         var id = sanitize(req.params.id);
         Termo

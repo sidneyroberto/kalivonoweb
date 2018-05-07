@@ -22,16 +22,11 @@ class Consulta extends Component {
 
         this.aoPesquisar = this.aoPesquisar.bind(this);
         this.aoVisualizarTermo = this.aoVisualizarTermo.bind(this);
-        this.aoEditarTermo = this.aoEditarTermo.bind(this);
         this.aoRemoverTermo = this.aoRemoverTermo.bind(this);
         this.removerTermo = this.removerTermo.bind(this);
     }
 
     aoVisualizarTermo(termo) {
-        this.setState({ termoSelecionado: termo });
-    }
-
-    aoEditarTermo(termo) {
         this.setState({ termoSelecionado: termo });
     }
 
@@ -151,8 +146,7 @@ class Consulta extends Component {
                             idModalRemocao="modalRemocao"
                             termos={this.state.termos}
                             funcaoVisualizacao={this.aoVisualizarTermo}
-                            funcaoRemocao={this.aoRemoverTermo}
-                            funcaoEdicao={this.aoEditarTermo} />
+                            funcaoRemocao={this.aoRemoverTermo} />
                     </div>
                 }
 

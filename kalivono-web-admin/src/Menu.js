@@ -6,7 +6,7 @@ import {
     Redirect,
     Link
 } from 'react-router-dom';
-import NovoTermo from './NovoTermo';
+import Cadastro from './Cadastro';
 import Consulta from './Consulta';
 
 class Menu extends Component {
@@ -31,7 +31,7 @@ class Menu extends Component {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/novo">
+                                    <Link to="/cadastro">
                                         <span className="nav-link">Novo termo</span>
                                     </Link>
                                 </li>
@@ -41,7 +41,7 @@ class Menu extends Component {
                     <br />
                     <Switch>
                         <Route name="consulta" path="/consulta" component={Consulta} />
-                        <Route name="novo" path="/novo" component={NovoTermo} />
+                        <Route name="cadastro" path="/cadastro" component={Cadastro} />
                         <Redirect from="/*" to="consulta" />
                     </Switch>
                 </div>

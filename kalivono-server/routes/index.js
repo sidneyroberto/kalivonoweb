@@ -10,6 +10,7 @@ router.get('/', (req, res) => {
 
 router.get('/termos/:filtro', TermoController.buscar);
 router.post('/termos', TermoController.salvar);
+router.put('/termos/:id', TermoController.atualizar)
 router.delete('/termos/:id', TermoController.remover);
 
 export default router;

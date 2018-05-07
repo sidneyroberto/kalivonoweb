@@ -3,13 +3,14 @@ import ModalMidia from './ModalMidia';
 import TabelaMidias from './TabelaMidias';
 import axios from 'axios';
 import $ from 'jquery';
+import { Link } from 'react-router-dom';
 
-class NovoTermo extends Component {
+class Cadastro extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            termo: this.criaNovoTermoLimpo(),
+            termo: this.props.location.state && this.props.location.state.termo ? this.props.location.state.termo : this.criaNovoTermoLimpo(),
             midia: '',
             mensagemMidia: '',
             midiaSelecionada: {
@@ -18,7 +19,8 @@ class NovoTermo extends Component {
             },
             mensagem: '',
             sucesso: false,
-            erro: false
+            erro: false,
+            ehAtualizacao: this.props.location.state && this.props.location.state.termo ? true : false
         };
         this.urlApi = 'http://localhost:3000/termos/';
 
@@ -34,11 +36,13 @@ class NovoTermo extends Component {
     }
 
     removerMidia(midia) {
-        let midiasAtuais = this.state.midias;
+        let midiasAtuais = this.state.termo.midias;
         midiasAtuais = midiasAtuais.filter(function (m) {
             return m.url !== midia.url;
         });
-        this.setState({ midias: midiasAtuais });
+        let novoTermo = this.state.termo;
+        novoTermo.midias = midiasAtuais;
+        this.setState({ termo: novoTermo });
     }
 
     adicionarMidia(evento) {
@@ -106,28 +110,52 @@ class NovoTermo extends Component {
         if (this.state.termo.midias.length === 0) {
             this.setState({ mensagemMidia: 'É preciso adicionar ao menos uma mídia' });
         } else {
-            axios
-                .post(this.urlApi, this.state.termo)
-                .then((termo) => {
-                    this.setState({
-                        mensagem: 'Termo salvo',
-                        termo: this.criaNovoTermoLimpo(),
-                        sucesso: true
+            if (this.state.ehAtualizacao) {
+                axios
+                    .put(`${this.urlApi}${this.state.termo._id}`, this.state.termo)
+                    .then((termo) => {
+                        this.setState({
+                            mensagem: 'Termo editado',
+                            sucesso: true
+                        });
+                        $('html, body').animate(
+                            {
+                                scrollTop: $("#inicio").offset().top
+                            },
+                            500
+                        );
+                    })
+                    .catch((erro) => {
+                        console.log(erro);
+                        this.setState({
+                            mensagem: 'Ocorreu um erro ao tentar editar o termo',
+                            erro: true
+                        });
                     });
-                    $('html, body').animate(
-                        {
-                            scrollTop: $("#inicio").offset().top
-                        },
-                        500
-                    );
-                })
-                .catch((erro) => {
-                    console.log(erro);
-                    this.setState({
-                        mensagem: 'Ocorreu um erro ao tentar salvar o termo',
-                        erro: true
+            } else {
+                axios
+                    .post(this.urlApi, this.state.termo)
+                    .then((termo) => {
+                        this.setState({
+                            mensagem: 'Termo salvo',
+                            termo: this.criaNovoTermoLimpo(),
+                            sucesso: true
+                        });
+                        $('html, body').animate(
+                            {
+                                scrollTop: $("#inicio").offset().top
+                            },
+                            500
+                        );
+                    })
+                    .catch((erro) => {
+                        console.log(erro);
+                        this.setState({
+                            mensagem: 'Ocorreu um erro ao tentar salvar o termo',
+                            erro: true
+                        });
                     });
-                });
+            }
         }
     }
 
@@ -146,7 +174,7 @@ class NovoTermo extends Component {
             <div className="container" id="inicio">
                 <div className="row">
                     <div className="col-md-12">
-                        <h3>Novo termo</h3>
+                        <h3>{this.state.ehAtualizacao ? 'Editar termo' : 'Novo termo'}</h3>
                     </div>
                 </div>
 
@@ -215,7 +243,14 @@ class NovoTermo extends Component {
                                 funcaoDeRemocao={this.removerMidia}
                                 funcaoDeVisualizacao={this.aoVisualizar}
                                 idModal="modalMidia" />
-                            <input type="submit" className="btn btn-primary" value="Salvar" />
+
+                            <div>
+                                <input type="submit" className="btn btn-primary" value={this.state.ehAtualizacao ? 'Editar' : 'Salvar'} />
+                                &nbsp;
+                                <Link className="btn btn-secondary" to={{ pathname: '/consulta' }}>
+                                    Voltar
+                                </Link>
+                            </div>
                         </form>
                     </div>
 
@@ -227,4 +262,4 @@ class NovoTermo extends Component {
     }
 }
 
-export default NovoTermo;
+export default Cadastro;
